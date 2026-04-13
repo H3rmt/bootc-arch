@@ -1,0 +1,38 @@
+name: build-and-push
+
+on:
+  schedule:
+    # Run at 3:00 AM every Saturday
+    - cron: "0 3 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install podman
+        run: sudo apt-get update && sudo apt-get install -y podman
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | sudo podman login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build chunked image
+        run: |
+          podman build --network=host -f Containerfile -t ghcr.io/${{ github.repository }}-base:weekly .
+          export CHUNKAH_CONFIG_STR="$(podman inspect ghcr.io/${{ github.repository }}-base:weekly)"
+          podman run --rm --mount=type=image,src=ghcr.io/${{ github.repository }}-base:weekly,dest=/chunkah -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah build --label ostree.bootable=1 --compressed --max-layers 256 | podman load | \
+            sort -n | \
+            head -n1 | \
+            cut -d, -f2 | \
+            cut -d: -f3 | \
+            xargs -I{} podman tag {} ghcr.io/${{ github.repository }}:weekly
+
+      - name: Push chunked image
+        run: podman push "ghcr.io/${{ github.repository }}:weekly"
+
