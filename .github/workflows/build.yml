@@ -30,7 +30,7 @@ jobs:
         run: |
           sudo podman build --network=host -f Containerfile -t ghcr.io/${IMAGE_REPO}-base:weekly .
           export CHUNKAH_CONFIG_STR="$(sudo podman inspect ghcr.io/${IMAGE_REPO}-base:weekly)"
-          sudo podman run --rm --mount=type=image,src=ghcr.io/${IMAGE_REPO}-base:weekly,dest=/chunkah -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah build --label ostree.bootable=1 --compressed --max-layers 256 | sudo podman load | \
+          sudo podman run --rm --mount=type=image,src="ghcr.io/${IMAGE_REPO}-base:weekly",dest=/chunkah -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah build --label ostree.bootable=1 --compressed --max-layers 256 | sudo podman load | \
             sort -n | \
             head -n1 | \
             cut -d, -f2 | \

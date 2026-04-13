@@ -1,0 +1,29 @@
+# bootc-image-builder config
+#
+# Btrfs layout using disk customizations.
+
+[[customizations.disk.partitions]]
+type = "btrfs"
+minsize = "40 GiB"
+
+[[customizations.disk.partitions.subvolumes]]
+name = "root"
+mountpoint = "/"
+
+[[customizations.disk.partitions.subvolumes]]
+name = "home"
+mountpoint = "/var"
+
+[[customizations.disk.partitions]]
+type = "plain"
+fs_type = "swap"
+minsize = "4 GiB"
+mountpoint = ""
+
+[[customizations.user]]
+name = "user"
+# Generate a hash with: `openssl passwd -6`
+# this is hash for `test`
+password = "$6$YFkBMk5ktxw.ZL5F$rr6tjT8SBtFfecwkF9Juo5W3FnGQ6hrmXiRJGvOn3ZwoF8yOHU4V5mFaUxGhGyjmfrBxABty17Ux2arkCL/dA0"
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExampleKeyHere user@example.com"
+groups = ["wheel", "docker"]
