@@ -1,0 +1,12 @@
+[Unit]
+Description=Ensure configured Flatpak apps are installed
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/after-boot.sh
+Nice=10
+
+[Install]
+WantedBy=multi-user.target
