@@ -10,7 +10,7 @@ The container image is published to GHCR by the weekly GitHub Action.
 
 ## Install From Live USB
 
-Boot the target PC from a live USB that has `podman` available.
+Boot the target PC from a live USB that has `podman` available. (use `cow_spacesize=8G` to increase availible size in live environment)
 
 If you want a config-driven layout, build a disk image with [`example/config.toml`](example/config.toml) instead of partitioning by hand. That config uses `customizations.disk.partitions` with a btrfs volume and defines the user setup directly.
 
@@ -26,7 +26,7 @@ To install directly to a disk from live USB, let `bootc` create the layout:
 2. Pull the image:
 
 ```bash
-podman pull ghcr.io/h3rmt/bootc-arch:weekly
+podman pull --root /mnt --storage-driver=vfs ghcr.io/h3rmt/bootc-arch:weekly
 ```
 
 3. Install it to the disk, replacing `/dev/nvme0n1` with your target device:
