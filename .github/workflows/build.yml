@@ -24,15 +24,15 @@ jobs:
 
       - name: Build chunked image
         run: |
-          podman build --network=host -f Containerfile -t ghcr.io/${{ github.repository }}-base:weekly .
-          export CHUNKAH_CONFIG_STR="$(podman inspect ghcr.io/${{ github.repository }}-base:weekly)"
-          podman run --rm --mount=type=image,src=ghcr.io/${{ github.repository }}-base:weekly,dest=/chunkah -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah build --label ostree.bootable=1 --compressed --max-layers 256 | podman load | \
+          sudo podman build --network=host -f Containerfile -t ghcr.io/${{ github.repository }}-base:weekly .
+          export CHUNKAH_CONFIG_STR="$(sudo podman inspect ghcr.io/${{ github.repository }}-base:weekly)"
+          sudo podman run --rm --mount=type=image,src=ghcr.io/${{ github.repository }}-base:weekly,dest=/chunkah -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah build --label ostree.bootable=1 --compressed --max-layers 256 | sudo podman load | \
             sort -n | \
             head -n1 | \
             cut -d, -f2 | \
             cut -d: -f3 | \
-            xargs -I{} podman tag {} ghcr.io/${{ github.repository }}:weekly
+            xargs -I{} sudo podman tag {} ghcr.io/${{ github.repository }}:weekly
 
       - name: Push chunked image
-        run: podman push "ghcr.io/${{ github.repository }}:weekly"
+        run: sudo podman push "ghcr.io/${{ github.repository }}:weekly"
 
