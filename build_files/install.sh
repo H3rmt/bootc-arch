@@ -32,7 +32,7 @@ pacman --noconfirm -Sy ncdu \
     rustup go python alacritty fzf just make docker docker-compose docker-buildx \
     firefox brightnessctl pavucontrol mpv chromium podman \
     gnome-control-center gnome-keyring hyprpolkitagent \
-    flatpak pkgstats
+    flatpak pkgstats distrobox
 
 # install paru
 groupadd -g 771 builder || true
