@@ -36,7 +36,7 @@ jobs:
 
           export CHUNKAH_CONFIG_STR="$(sudo podman inspect "${IMAGE_REPO}-base:weekly")"
           echo "Config: $CHUNKAH_CONFIG_STR"
-          sudo podman run --rm -v $(pwd):/out --mount=type=image,src="${IMAGE_REPO}-base:weekly",dest=/chunkah -e CHUNKAH_CONFIG_STR \
+          sudo podman run --rm -v $(pwd):/out --mount=type=image,src="${IMAGE_REPO}-base:weekly",target=/chunkah -e CHUNKAH_CONFIG_STR \
             quay.io/coreos/chunkah build -v --label ostree.bootable=1 --compressed --max-layers 400 -o /out/image
           
           echo "Built chunked image: ${IMAGE_REPO}:weekly"
