@@ -58,8 +58,7 @@ su builder -c '
     visual-studio-code-bin \
     jetbrains-toolbox \
     google-chrome \
-    paru-bin \
-    bootc
+    paru-bin
 '
 rm -f /etc/sudoers.d/builder
 userdel -r builder || true
