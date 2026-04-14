@@ -30,31 +30,21 @@ jobs:
         run: |
           set -euo pipefail
 
-          sudo podman build \
-            --network=host \
-            -f Containerfile \
-            -t "${IMAGE_REPO}-base:weekly" \
-            .
+          sudo podman build --network=host -f Containerfile -t "${IMAGE_REPO}-base:weekly" .
 
           echo "Built base image: ${IMAGE_REPO}-base:weekly"
 
-          export CHUNKAH_CONFIG_STR="$(
-            sudo podman inspect "${IMAGE_REPO}-base:weekly"
-          )"
+          export CHUNKAH_CONFIG_STR="$(sudo podman inspect "${IMAGE_REPO}-base:weekly")"
+          echo "Config: $CHUNKAH_CONFIG_STR"
+          sudo podman run --rm -v $(pwd):/out --mount=type=image,src="${IMAGE_REPO}-base:weekly",dest=/chunkah -e CHUNKAH_CONFIG_STR \
+            quay.io/coreos/chunkah build -v --label ostree.bootable=1 --compressed --max-layers 400 -o /out/image
+          
+          echo "Built chunked image: ${IMAGE_REPO}:weekly"
+          
+          sudo podman load -i $(pwd)/image "${IMAGE_REPO}:weekly" > out
+          sudo podman tag "$(awk -F'sha256:' '/sha256:/ {print $2}' out)" "${IMAGE_REPO}:weekly"
 
-          sudo podman run --rm \
-            --mount=type=image,src="${IMAGE_REPO}-base:weekly",dest=/chunkah \
-            -e CHUNKAH_CONFIG_STR \
-            quay.io/coreos/chunkah build \
-            --label ostree.bootable=1 \
-            --compressed \
-            --max-layers 256 | \
-            sudo podman load | \
-            sort -n | \
-            head -n1 | \
-            cut -d, -f2 | \
-            cut -d: -f3 | \
-            xargs -I{} sudo podman tag {} "${IMAGE_REPO}:weekly"
+          echo "Loaded chunked image: ${IMAGE_REPO}:weekly"
 
       - name: Push chunked image
         run: sudo podman push "${IMAGE_REPO}:weekly"
