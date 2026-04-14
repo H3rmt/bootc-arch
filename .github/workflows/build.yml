@@ -41,7 +41,7 @@ jobs:
           
           echo "Built chunked image: ${IMAGE_REPO}:weekly"
           
-          sudo podman load -i $(pwd)/image "${IMAGE_REPO}:weekly" > out
+          sudo podman load -i $(pwd)/image > out
           sudo podman tag "$(awk -F'sha256:' '/sha256:/ {print $2}' out)" "${IMAGE_REPO}:weekly"
 
           echo "Loaded chunked image: ${IMAGE_REPO}:weekly"
