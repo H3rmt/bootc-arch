@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-bootc:42 AS bootc-source
+FROM quay.io/fedora/fedora-bootc:43 AS bootc-source
 
 FROM docker.io/archlinux/archlinux:latest AS builder
 
@@ -23,6 +23,10 @@ RUN --mount=type=bind,source=build_files,target=/prepare \
     --mount=type=tmpfs,dst=/run \
     /prepare/finalize.sh
 
-LABEL containers.bootc 1
+LABEL containers.bootc=1
+LABEL ostree.bootable=1
+LABEL org.opencontainers.image.name="Bootc Arch"
+LABEL org.opencontainers.image.version=1
+LABEL org.opencontainers.image.url="https://github.com/H3rmt/bootc-arch"
 
 RUN bootc container lint
