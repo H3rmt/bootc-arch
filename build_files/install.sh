@@ -43,6 +43,10 @@ Defaults:builder !requiretty
 EOF
 chmod 440 /etc/sudoers.d/builder
 
+# Default user for installed systems
+useradd -m -G wheel,docker user || true
+echo 'user:test' | chpasswd
+
 # cant run makepkg as root, so we have to do it as builder
 # cant finish the install as builder because install needs root
 su builder -c '
@@ -53,7 +57,6 @@ su builder -c '
 pacman -U --noconfirm /tmp/yay-bin/*.pkg.tar.zst
 which yay
 su builder -c '
-  rustup default stable
   yay --noconfirm --needed -S \
     visual-studio-code-bin \
     jetbrains-toolbox \
