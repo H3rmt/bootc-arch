@@ -29,10 +29,20 @@ pacman --noconfirm -Sy dracut linux linux-firmware less zsh \
 pacman --noconfirm -Sy ncdu \
     htop btop networkmanager upower powertop \
     nvme-cli smartmontools bluez plymouth \
-    rustup go python alacritty fzf just make docker docker-compose docker-buildx \
-    firefox brightnessctl pavucontrol mpv chromium podman \
-    gnome-control-center gnome-keyring hyprpolkitagent \
-    flatpak pkgstats distrobox
+    alacritty fzf ripgrep make \
+    firefox brightnessctl pavucontrol mpv chromium \
+    gnome-control-center gnome-keyring \
+    flatpak pkgstats distrobox podman
+
+
+# Default user for installed systems
+groupadd -g 1000 user || true
+useradd -m user -u 1000 -g 1000 || true
+echo 'user:test' | chpasswd
+cat >/etc/sudoers.d/builder <<'EOF'
+user ALL=(ALL:ALL) ALL
+EOF
+chmod 440 /etc/sudoers.d/builder
 
 # install paru
 groupadd -g 771 builder || true
@@ -42,10 +52,6 @@ builder ALL=(ALL) NOPASSWD: ALL
 Defaults:builder !requiretty
 EOF
 chmod 440 /etc/sudoers.d/builder
-
-# Default user for installed systems
-useradd -m -G wheel,docker user || true
-echo 'user:test' | chpasswd
 
 # cant run makepkg as root, so we have to do it as builder
 # cant finish the install as builder because install needs root
@@ -60,8 +66,7 @@ su builder -c '
   yay --noconfirm --needed -S \
     visual-studio-code-bin \
     jetbrains-toolbox \
-    google-chrome \
-    paru-bin
+    google-chrome
 '
 rm -f /etc/sudoers.d/builder
 userdel -r builder || true
@@ -78,5 +83,8 @@ flatpak install -y flathub \
   org.libreoffice.LibreOffice \
   org.gnome.baobab \
   md.obsidian.Obsidian 
+
+# remove yay and pacman
+pacman --noconfirm -Rnss yay-bin pacman
 
 echo "Install completed"
