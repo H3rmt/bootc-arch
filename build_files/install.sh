@@ -85,6 +85,6 @@ flatpak install -y flathub \
   md.obsidian.Obsidian 
 
 # remove yay and pacman
-pacman --noconfirm -Rnss yay-bin pacman
+pacman --noconfirm -Rnss yay-bin pacman base base-devel archlinux-keyring
 
 echo "Install completed"
