@@ -10,15 +10,7 @@ The container image is published to GHCR by the weekly GitHub Action.
 
 ## Install From Live USB
 
-Boot the target PC from a live USB that has `podman` available. (use `cow_spacesize=8G` to increase availible size in live environment)
-
-If you want a config-driven layout, build a disk image with [`example/config.toml`](example/config.toml) instead of partitioning by hand. That config uses `customizations.disk.partitions` with a btrfs volume and defines the user setup directly.
-
-Docs:
-
-- https://osbuild.org/docs/user-guide/blueprint-reference/
-- https://osbuild.org/docs/user-guide/partitioning/
-- https://github.com/osbuild/bootc-image-builder/?tab=readme-ov-file#-build-config
+Boot the target PC from a live USB that has `podman` available. (use `cow_spacesize=14G` kernel param or `sudo mount -o remount,size=14G /run` to increase availible size in live environment)
 
 To install directly to a disk from live USB, let `bootc` create the layout:
 
@@ -26,17 +18,18 @@ To install directly to a disk from live USB, let `bootc` create the layout:
 2. Pull the image:
 
 ```bash
-podman pull --root /mnt --storage-driver=vfs ghcr.io/h3rmt/bootc-arch:weekly
+sudo podman pull --root /home/user/data/storage ghcr.io/h3rmt/bootc-arch:weekly
 ```
 
 3. Install it to the disk, replacing `/dev/nvme0n1` with your target device:
 
 ```bash
-podman run --rm --privileged --pid=host --ipc=host --security-opt label=type:unconfined_t \
+# sudo is required for this command
+sudo podman run --root /mnt/storage --privileged --pid=host --ipc=host --security-opt label=type:unconfined_t \
   -v /dev:/dev \
-  -v /var/lib/containers:/var/lib/containers \
+  -v /mnt:/var/lib/containers \
   ghcr.io/h3rmt/bootc-arch:weekly \
-  bootc install to-disk /dev/nvme0n1 --filesystem btrfs --run-fetch-check --bootloader systemd --composefs-backend --block-setup tpm2-luks
+  bootc install to-disk /dev/nvme0n1 --filesystem btrfs --run-fetch-check --bootloader systemd --composefs-backend
 ```
 
 If you want to build a [raw disk image](https://bootc.dev/bootc/bootc-install.html) instead of installing to a physical disk, use `bootc install to-disk --via-loopback`.

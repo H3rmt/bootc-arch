@@ -20,9 +20,9 @@ install -Dm755 /prepare/files/pacman/install-cachy.sh      /tmp/install-cachy.sh
 # tar xvf cachyos-repo.tar.xz && cd /tmp/cachyos-repo && yes '' | ./cachyos-repo.sh
 
 pacman --noconfirm -Sy dracut linux linux-firmware less zsh \
-    ostree btrfs-progs e2fsprogs openssh \
-    xfsprogs dosfstools skopeo ttf-jetbrains-mono-nerd  \
-    dbus-glib glib2 ostree shadow man dbus base-devel \
+    ostree btrfs-progs e2fsprogs openssh exfat-utils \
+    dosfstools skopeo ttf-jetbrains-mono-nerd  \
+    dbus-glib glib2 shadow man dbus base-devel \
     intel-ucode micro git sudo systemd noto-fonts
 
 
@@ -33,16 +33,6 @@ pacman --noconfirm -Sy ncdu \
     firefox brightnessctl pavucontrol mpv chromium \
     gnome-control-center gnome-keyring \
     flatpak pkgstats distrobox podman
-
-
-# Default user for installed systems
-groupadd -g 1000 user || true
-useradd -m user -u 1000 -g 1000 || true
-echo 'user:test' | chpasswd
-cat >/etc/sudoers.d/builder <<'EOF'
-user ALL=(ALL:ALL) ALL
-EOF
-chmod 440 /etc/sudoers.d/builder
 
 # install paru
 groupadd -g 771 builder || true
@@ -85,6 +75,6 @@ flatpak install -y flathub \
   md.obsidian.Obsidian 
 
 # remove yay and pacman
-pacman --noconfirm -Rnss yay-bin pacman base base-devel archlinux-keyring
+pacman --noconfirm -Rndd yay-bin pacman
 
 echo "Install completed"
