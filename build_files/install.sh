@@ -21,7 +21,7 @@ install -Dm755 /prepare/files/pacman/install-cachy.sh      /tmp/install-cachy.sh
 
 pacman --noconfirm -Sy dracut linux linux-firmware less zsh \
     ostree btrfs-progs e2fsprogs openssh exfat-utils \
-    dosfstools skopeo ttf-jetbrains-mono-nerd  \
+    dosfstools skopeo ttf-jetbrains-mono-nerd bootupd \
     dbus-glib glib2 shadow man dbus base-devel \
     intel-ucode micro git sudo systemd noto-fonts
 

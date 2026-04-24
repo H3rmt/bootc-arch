@@ -25,11 +25,11 @@ sudo podman pull --root /home/user/data/storage ghcr.io/h3rmt/bootc-arch:weekly
 
 ```bash
 # sudo is required for this command
-sudo podman run --root /mnt/storage --privileged --pid=host --ipc=host --security-opt label=type:unconfined_t \
+sudo podman run --network=host --privileged --pid=host --ipc=host -e RUST_LOG=debug \
   -v /dev:/dev \
-  -v /mnt:/var/lib/containers \
+  -v /var/lib/containers:/var/lib/containers -v /etc/containers:/etc/containers \
   ghcr.io/h3rmt/bootc-arch:weekly \
-  bootc install to-disk /dev/nvme0n1 --filesystem btrfs --run-fetch-check --bootloader systemd --composefs-backend
+  bootc install to-disk /dev/nvme0n1 --filesystem btrfs --bootloader systemd --composefs-backend
 ```
 
 If you want to build a [raw disk image](https://bootc.dev/bootc/bootc-install.html) instead of installing to a physical disk, use `bootc install to-disk --via-loopback`.
