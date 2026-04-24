@@ -29,7 +29,7 @@ pacman --noconfirm -Sy dracut linux linux-firmware less zsh \
 pacman --noconfirm -Sy ncdu \
     htop btop tree networkmanager upower powertop \
     nvme-cli smartmontools bluez plymouth \
-    alacritty fzf ripgrep make rustup go-md2man \
+    alacritty fzf ripgrep make rust go-md2man \
     firefox brightnessctl pavucontrol mpv chromium \
     gnome-control-center gnome-keyring \
     flatpak pkgstats distrobox podman
@@ -80,7 +80,7 @@ tree /tmp/output
 cp -r /tmp/output/* /
 
 # remove yay and pacman
-pacman --noconfirm -Rns yay-bin rustup go-md2man
+pacman --noconfirm -Rns yay-bin rust go-md2man
 pacman --noconfirm -Rndd --noconfirm pacman
 
 echo "Install completed"
