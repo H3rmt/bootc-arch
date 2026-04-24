@@ -7,6 +7,7 @@ COPY --from=bootc-source /usr/lib/dracut/modules.d/51bootc /usr/lib/dracut/modul
 COPY --from=bootc-source /usr/lib/bootc/initramfs-setup /usr/lib/bootc/initramfs-setup
 COPY --from=bootc-source /usr/lib/systemd/system-generators/bootc-systemd-generator /lib/systemd/system-generators/bootc-systemd-generator
 COPY --from=bootc-source /usr/lib/systemd/system/bootc* /usr/lib/systemd/system/
+COPY --from=bootc-source /usr/bin/bootupd /usr/bin/bootupd
 
 RUN --mount=type=bind,source=build_files,target=/prepare \
     --mount=type=tmpfs,dst=/tmp \
