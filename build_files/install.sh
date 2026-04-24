@@ -74,6 +74,11 @@ flatpak install -y flathub \
   org.gnome.baobab \
   md.obsidian.Obsidian 
 
+git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc
+cd /tmp/bootc && make bin install-all DESTDIR=/tmp/output
+tree /tmp/output
+cp -r /tmp/output/* /
+
 # remove yay and pacman
 pacman --noconfirm -Rndd yay-bin pacman
 
