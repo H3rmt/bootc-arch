@@ -29,7 +29,7 @@ pacman --noconfirm -Sy dracut linux linux-firmware less zsh \
 pacman --noconfirm -Sy ncdu \
     htop btop networkmanager upower powertop \
     nvme-cli smartmontools bluez plymouth \
-    alacritty fzf ripgrep make \
+    alacritty fzf ripgrep make cargo \
     firefox brightnessctl pavucontrol mpv chromium \
     gnome-control-center gnome-keyring \
     flatpak pkgstats distrobox podman
@@ -80,6 +80,6 @@ tree /tmp/output
 cp -r /tmp/output/* /
 
 # remove yay and pacman
-pacman --noconfirm -Rndd yay-bin pacman
+pacman --noconfirm -Rndd yay-bin pacman cargo
 
 echo "Install completed"
