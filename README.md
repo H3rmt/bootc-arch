@@ -32,4 +32,10 @@ sudo podman run --network=host --privileged --pid=host --ipc=host -e RUST_LOG=de
   bootc install to-disk /dev/nvme0n1 --filesystem btrfs --bootloader systemd --composefs-backend
 ```
 
+4. Setup user
+```
+homectl create user --shell=/usr/bin/zsh --member-of=wheel,i2c,uucp
+homectl activate user
+```
+
 If you want to build a [raw disk image](https://bootc.dev/bootc/bootc-install.html) instead of installing to a physical disk, use `bootc install to-disk --via-loopback`.

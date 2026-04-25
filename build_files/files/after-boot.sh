@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# nove to shell script directory
+cd /opt/after-boot
+
 log() {
   echo "[after-boot] $*"
 }
+
+# Store hash of the script content to check if it has changed since last run
+current_hash=$(sha256sum after-boot.sh flatpak-apps.txt)
+hash_file="/var/lib/after-boot/last_hash"
+if [[ -f "$hash_file" ]]; then
+  last_hash=$(cat "$hash_file")
+  if [[ "$current_hash" == "$last_hash" ]]; then
+    log "Script has not changed since last run, skipping execution"
+    exit 0
+  fi
+fi
+echo "$current_hash" > "$hash_file"
 
 # Wait a bit for networking to be usable
 for _ in $(seq 1 60); do
@@ -15,54 +30,22 @@ for _ in $(seq 1 60); do
 done
 echo ""
 
-# Ensure Flathub exists
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
 
-# System-wide apps to keep installed
-apps=(
-  org.torproject.torbrowser-launcher 
-  org.shotcut.Shotcut 
-  # org.onlyoffice.desktopeditors 
-  # org.libreoffice.LibreOffice 
-  org.inkscape.Inkscape 
-  org.gnome.clocks 
-  # org.gnome.baobab 
-  org.gnome.Snapshot 
-  org.gnome.PowerStats 
-  org.gnome.Evince 
-  org.gnome.Calculator 
-  org.gnome.Boxes 
-  org.gimp.GIMP 
-  net.nokyan.Resources 
-  # md.obsidian.Obsidian 
-  io.missioncenter.MissionCenter 
-  io.gitlab.adhami3310.Converter 
-  io.github.flattool.Warehouse 
-  com.usebottles.bottles 
-  com.spotify.Client 
-  com.obsproject.Studio 
-  com.getpostman.Postman
-  com.github.xournalpp.xournalpp 
-  com.github.tchx84.Flatseal 
-  cc.arduino.IDE2
-)
+flatpak_file="flatpak-apps.txt"
+# apps must be read from /opt/after-boot/flatpak-apps.txt, one app per line
+if [[ -f "$flatpak_file" ]]; then
+  log "Installing flatpak apps from $flatpak_file"
+  while IFS= read -r app; do
+    if [[ -n "$app" ]]; then
+      log "Installing $app"
+      flatpak install -y --noninteractive "$app" || log "Failed to install $app, continuing with next app"
+    fi
+  done < "$flatpak_file"
+else
+  log "No $flatpak_file found, skipping flatpak app installation"
+fi
 
-for app in "${apps[@]}"; do
-  if flatpak info "$app" >/dev/null 2>&1; then
-    log "$app already installed"
-  else
-    log "installing $app"
-    flatpak install -y flathub "$app"
-  fi
-done
-
-# Optional: keep them updated too
+# update flatpak apps
 flatpak update -y || true
-
-# update rust
-rustup self update
-
-# install rust toolchain
-rustup toolchain install stable
 
 log "done"

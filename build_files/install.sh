@@ -2,8 +2,7 @@
 
 set -xeuo pipefail
 
-
-# configure pacman
+# configure pacman keys
 pacman-key --init
 pacman --noconfirm -Syu
 
@@ -14,73 +13,21 @@ install -Dm644 /prepare/files/pacman/pacman.conf           /etc/pacman.conf
 install -Dm644 /prepare/files/pacman/mirrorlist            /etc/pacman.d/mirrorlist
 install -Dm755 /prepare/files/pacman/install-cachy.sh      /tmp/install-cachy.sh
 
+# switch to cachy mirrors
 /tmp/install-cachy.sh
 
-# cd /tmp && curl -O https://mirror.cachyos.org/cachyos-repo.tar.xz
-# tar xvf cachyos-repo.tar.xz && cd /tmp/cachyos-repo && yes '' | ./cachyos-repo.sh
+# install basic packages and tools
+pacman --noconfirm -Sy dracut linux linux-firmware less zsh tree tmux \
+    ostree btrfs-progs e2fsprogs openssh exfat-utils dosfstools skopeo \
+    ttf-jetbrains-mono-nerd dbus-glib glib2 shadow man dbus base-devel \
+    intel-ucode micro git sudo systemd noto-fonts ncdu htop btop yazi zoxide \
+    upower powertop nvme-cli smartmontools bluez plymouth fzf networkmanager \
+    ripgrep make brightnessctl flatpak pkgstats distrobox podman gparted
 
-pacman --noconfirm -Sy dracut linux linux-firmware less zsh \
-    ostree btrfs-progs e2fsprogs openssh exfat-utils \
-    dosfstools skopeo ttf-jetbrains-mono-nerd \
-    dbus-glib glib2 shadow man dbus base-devel \
-    intel-ucode micro git sudo systemd noto-fonts
-
-
-pacman --noconfirm -Sy ncdu \
-    htop btop tree networkmanager upower powertop \
-    nvme-cli smartmontools bluez plymouth \
-    alacritty fzf ripgrep make rust go-md2man \
-    firefox brightnessctl pavucontrol mpv chromium \
-    gnome-control-center gnome-keyring \
-    flatpak pkgstats distrobox podman
-
-# install paru
-groupadd -g 771 builder || true
-useradd -m builder -u 771 -g 771 || true
-cat >/etc/sudoers.d/builder <<'EOF'
-builder ALL=(ALL) NOPASSWD: ALL
-Defaults:builder !requiretty
-EOF
-chmod 440 /etc/sudoers.d/builder
-
-# cant run makepkg as root, so we have to do it as builder
-# cant finish the install as builder because install needs root
-su builder -c '
-  git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-  cd /tmp/yay-bin
-  makepkg -s --noconfirm
-'
-pacman -U --noconfirm /tmp/yay-bin/*.pkg.tar.zst
-which yay
-su builder -c '
-  yay --noconfirm --needed -S \
-    visual-studio-code-bin \
-    jetbrains-toolbox \
-    google-chrome
-'
-rm -f /etc/sudoers.d/builder
-userdel -r builder || true
-groupdel builder || true
-
-rm -rf /usr/lib/sysimage/cache/pacman/pkg
-mkdir /usr/lib/sysimage/cache/pacman/pkg
+# install bootc
+pacman --noconfirm -Sy rust go-md2man
+git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc
+cd /tmp/bootc && make bin install-all
 
 # enable flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-flatpak install -y flathub \
-  org.onlyoffice.desktopeditors \
-  org.libreoffice.LibreOffice \
-  org.gnome.baobab \
-  md.obsidian.Obsidian 
-
-git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc
-cd /tmp/bootc && make bin install-all DESTDIR=/tmp/output
-tree /tmp/output
-cp -r /tmp/output/* /
-
-# remove yay and pacman
-pacman --noconfirm -Rns yay-bin rust go-md2man
-pacman --noconfirm -Rndd --noconfirm pacman
-
-echo "Install completed"

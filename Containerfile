@@ -13,6 +13,11 @@ RUN --mount=type=bind,source=build_files,target=/prepare \
 RUN --mount=type=bind,source=build_files,target=/prepare \
     --mount=type=tmpfs,dst=/tmp \
     --mount=type=tmpfs,dst=/run \
+    /prepare/de.sh
+
+RUN --mount=type=bind,source=build_files,target=/prepare \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
     /prepare/finalize.sh
 
 LABEL containers.bootc=1
