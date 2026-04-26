@@ -1,5 +1,7 @@
 # bootc-arch
 
+[![Build](https://github.com/H3rmt/bootc-arch/actions/workflows/build.yml/badge.svg)](https://github.com/H3rmt/bootc-arch/actions/workflows/build.yml)
+
 Minimal Arch Linux [bootc](https://github.com/bootc-dev/bootc) image.
 
 - Arch Linux base
