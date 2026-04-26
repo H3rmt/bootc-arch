@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-# install paru
+# create builder user to build yay and other aur packages (can use sudo)
 groupadd -g 771 builder || true
 useradd -m builder -u 771 -g 771 || true
 cat >/etc/sudoers.d/builder <<'EOF'
@@ -20,12 +20,3 @@ su builder -c '
 '
 pacman -U --noconfirm /tmp/yay-bin/*.pkg.tar.zst
 which yay
-su builder -c '
-  yay --noconfirm --needed -S \
-    visual-studio-code-bin \
-    jetbrains-toolbox \
-    google-chrome
-'
-rm -f /etc/sudoers.d/builder
-userdel -r builder || true
-groupdel builder || true

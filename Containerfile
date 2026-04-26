@@ -8,6 +8,16 @@ RUN --mount=type=bind,source=build_files,target=/prepare \
 RUN --mount=type=bind,source=build_files,target=/prepare \
     --mount=type=tmpfs,dst=/tmp \
     --mount=type=tmpfs,dst=/run \
+    /prepare/setup.sh
+
+RUN --mount=type=bind,source=build_files,target=/prepare \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
+    /prepare/aur.sh
+
+RUN --mount=type=bind,source=build_files,target=/prepare \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
     /prepare/install.sh
 
 RUN --mount=type=bind,source=build_files,target=/prepare \
