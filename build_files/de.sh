@@ -7,7 +7,7 @@ pacman --noconfirm -Sy \
     alacritty firefox chromium pavucontrol mpv \
     podman-desktop rofi yad gnome-tweaks nautilus \
     gnome-keyring wl-clipboard playerctl pipewire wireplumber \
-    slurp grim swappy fuzzel ydotool sddm \
+    slurp grim swappy fuzzel ydotool sddm evince gvfs-mtp \
     gnome-software gnome-autoar gnome-bluetooth-3.0 gnome-disk-utility \
     gnome-disk-utility gnome-keyring gnome-power-manager xdg-desktop-portal-gnome \
 

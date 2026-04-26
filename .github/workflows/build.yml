@@ -30,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          sudo podman build --network=host -f Containerfile -t "${IMAGE_REPO}-base:weekly" .
+          sudo podman build --no-hostname --network=host -f Containerfile -t "${IMAGE_REPO}-base:weekly" .
           echo "Built base image: ${IMAGE_REPO}-base:weekly"
 
       - name: Build chunked image with chunkah
