@@ -2,21 +2,22 @@
 set -euo pipefail
 
 package_file="${1:-}"
-package_cmd="${2:-}"
+shift || true
+package_cmd=("$@")
 
 log() {
   echo "[install-packages.sh] $*"
 }
 
-if [[ -z "$package_file" || -z "$package_cmd" ]]; then
-	echo "Usage: $0 <package-file> <command>" >&2
+if [[ -z "$package_file" || ${#package_cmd[@]} -eq 0 ]]; then
+	echo "Usage: $0 <package-file> <command> [args...]" >&2
 	echo "Example: $0 /opt/after-boot/flatpak-apps.conf flatpak install -y --noninteractive" >&2
 	echo "Example: $0 /prepare/files/programs.conf pacman --noconfirm -Sy" >&2
 	exit 1
 fi
 
 if [[ -f "$package_file" ]]; then
-	log "Installing packages from $package_file using $package_cmd"
+	log "Installing packages from $package_file using ${package_cmd[*]}"
 	while IFS= read -r line; do
 		line_no_comment="${line%%#*}"
 		line_no_comment="${line_no_comment#${line_no_comment%%[![:space:]]*}}"
@@ -25,7 +26,7 @@ if [[ -f "$package_file" ]]; then
 		if [[ -n "$line_no_comment" ]]; then
 			for package in $line_no_comment; do
 				log "Installing $package"
-				"$package_cmd" "$package" || log "Failed to install $package, continuing with next package"
+				"${package_cmd[@]}" "$package" || log "Failed to install $package, continuing with next package"
 			done
 		fi
 	done < "$package_file"
