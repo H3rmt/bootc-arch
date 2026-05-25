@@ -85,6 +85,7 @@ run_install() {
 
     local mirror_url="https://mirror.cachyos.org/repo/x86_64/cachyos"
 
+    # TODO make dynamic by fetching the latest version from the mirror
     pacman --noconfirm -U "${mirror_url}/cachyos-keyring-20240331-1-any.pkg.tar.zst" \
               "${mirror_url}/cachyos-mirrorlist-27-1-any.pkg.tar.zst"    \
               "${mirror_url}/cachyos-v3-mirrorlist-27-1-any.pkg.tar.zst" \
