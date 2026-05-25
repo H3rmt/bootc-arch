@@ -8,8 +8,6 @@ log() {
   echo "[install-packages.sh] $*"
 }
 
-/prepare/files/install-packages.sh: line 26: pacman --noconfirm -Sy: command not found
-
 if [[ -z "$package_file" || -z "$package_cmd" ]]; then
 	echo "Usage: $0 <package-file> <command>" >&2
 	echo "Example: $0 /opt/after-boot/flatpak-apps.conf flatpak install -y --noninteractive" >&2

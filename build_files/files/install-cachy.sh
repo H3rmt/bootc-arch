@@ -100,11 +100,11 @@ run_install() {
 
     # curl mirrorlist, find first offurence of `pacman-...` like pacman-7.1.0.r9.g54d9411-3-x86_64.pkg.tar.zst
     # same for `cachyos-keyring-...` `cachyos-mirrorlist-...` `cachyos-v3-mirrorlist-...` `cachyos-v4-mirrorlist-...`
-    keyring_pkg=$(fetch_latest 'cachyos-keyring-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-keyring-20240331-1-any.pkg.tar.zst')
-    mirrorlist_pkg=$(fetch_latest 'cachyos-mirrorlist-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-mirrorlist-27-1-any.pkg.tar.zst')
-    v3_mirrorlist_pkg=$(fetch_latest 'cachyos-v3-mirrorlist-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-v3-mirrorlist-27-1-any.pkg.tar.zst')
-    v4_mirrorlist_pkg=$(fetch_latest 'cachyos-v4-mirrorlist-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-v4-mirrorlist-27-1-any.pkg.tar.zst')
-    pacman_pkg=$(fetch_latest 'pacman-[^"<> ]+x86_64\.pkg\.tar\.zst' 'pacman-7.1.0.r9.g54d9411-3-x86_64.pkg.tar.zst')
+    keyring_pkg=$(fetch_latest 'cachyos-keyring-[0-9][^"<> ]*\.pkg\.tar\.zst' 'cachyos-keyring-20240331-1-any.pkg.tar.zst')
+    mirrorlist_pkg=$(fetch_latest 'cachyos-mirrorlist-[0-9][^"<> ]*\.pkg\.tar\.zst' 'cachyos-mirrorlist-27-1-any.pkg.tar.zst')
+    v3_mirrorlist_pkg=$(fetch_latest 'cachyos-v3-mirrorlist-[0-9][^"<> ]*\.pkg\.tar\.zst' 'cachyos-v3-mirrorlist-27-1-any.pkg.tar.zst')
+    v4_mirrorlist_pkg=$(fetch_latest 'cachyos-v4-mirrorlist-[0-9][^"<> ]*\.pkg\.tar\.zst' 'cachyos-v4-mirrorlist-27-1-any.pkg.tar.zst')
+    pacman_pkg=$(fetch_latest 'pacman-[0-9][^"<> ]*x86_64\.pkg\.tar\.zst' 'pacman-7.1.0.r9.g54d9411-3-x86_64.pkg.tar.zst')
 
     pacman --noconfirm -U "${mirror_url}/${keyring_pkg}" \
               "${mirror_url}/${mirrorlist_pkg}"    \
