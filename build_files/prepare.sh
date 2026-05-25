@@ -18,6 +18,6 @@ install -Dm644 /prepare/files/after-boot.service  /usr/lib/systemd/system/after-
 systemctl enable after-boot.service 
 
 # Other config files
-install -Dm644 /prepare/conf/systemd/login-lid.conf             /etc/systemd/logind.conf.d/lid.conf
-install -Dm644 /prepare/conf/systemd/sleep-power.conf           /etc/systemd/sleep.conf.d/power.conf
-install -Dm644 /prepare/conf/systemd/user-hyprland-session.conf /etc/systemd/user/hyprland-session.conf
+install -Dm644 /prepare/conf/systemd/login-lid.conf               /etc/systemd/logind.conf.d/lid.conf
+install -Dm644 /prepare/conf/systemd/sleep-power.conf             /etc/systemd/sleep.conf.d/power.conf
+install -Dm644 /prepare/conf/systemd/user-hyprland-session.target /etc/systemd/user/hyprland-session.target
