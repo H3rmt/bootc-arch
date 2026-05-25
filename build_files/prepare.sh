@@ -13,7 +13,7 @@ install -Dm644 /prepare/conf/nix.conf              /etc/nix/nix.conf
 
 # copy after boot script and service
 install -Dm755 /prepare/files/after-boot.sh       /opt/after-boot/after-boot.sh
-install -Dm644 /prepare/files/flatpak-apps.txt    /opt/after-boot/flatpak-apps.txt
+install -Dm644 /prepare/files/flatpak-apps.conf   /opt/after-boot/flatpak-apps.conf
 install -Dm644 /prepare/files/after-boot.service  /usr/lib/systemd/system/after-boot.service
 systemctl enable after-boot.service 
 
