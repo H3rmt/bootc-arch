@@ -2,12 +2,12 @@
 set -xeuo pipefail
 
 # basic gui programs
-/prepare/files/install-packages.sh "/prepare/files/programs.conf" pacman --noconfirm -Sy
+/prepare/files/install-packages.sh "/prepare/files/programs.conf" pacman --noconfirm -S
 
 # Aur Packages
 /prepare/files/install-packages.sh "/prepare/files/aur-packages.conf" su builder -c 'yay --noconfirm --needed -S'
 
 # Hyprland
-/prepare/files/install-packages.sh "/prepare/files/hyprland-files.conf" pacman --noconfirm -Sy
+/prepare/files/install-packages.sh "/prepare/files/hyprland-files.conf" pacman --noconfirm -S
 
 systemctl enable sddm.service

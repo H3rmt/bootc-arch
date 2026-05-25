@@ -5,7 +5,7 @@ set -xeuo pipefail
 pacman --noconfirm -Sy dracut linux linux-firmware linux-headers glibc glib2 ostree systemd dbus flatpak
 
 # install packages
-/prepare/files/install-packages.sh "/prepare/files/packages.conf" pacman --noconfirm -Sy
+/prepare/files/install-packages.sh "/prepare/files/packages.conf" pacman --noconfirm -S
 
 # install bootc
 pacman --noconfirm -Sy rust go-md2man
