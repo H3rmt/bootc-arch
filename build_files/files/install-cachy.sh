@@ -77,6 +77,19 @@ add_specific_repo() {
     fi
 }
 
+fetch_latest() {
+    local pattern="$1"
+    local default="$2"
+    # list index page and extract matching filenames, choose newest via version sort
+    local found
+    found=$(curl -sL "${mirror_url}/" | grep -oE "${pattern}" | sort -V | tail -n1 || true)
+    if [ -z "$found" ]; then
+        echo "$default"
+    else
+        echo "$found"
+    fi
+}
+
 run_install() {
     msg "Installing CachyOS repo.."
 
@@ -85,12 +98,19 @@ run_install() {
 
     local mirror_url="https://mirror.cachyos.org/repo/x86_64/cachyos"
 
-    # TODO make dynamic by fetching the latest version from the mirror
-    pacman --noconfirm -U "${mirror_url}/cachyos-keyring-20240331-1-any.pkg.tar.zst" \
-              "${mirror_url}/cachyos-mirrorlist-27-1-any.pkg.tar.zst"    \
-              "${mirror_url}/cachyos-v3-mirrorlist-27-1-any.pkg.tar.zst" \
-              "${mirror_url}/cachyos-v4-mirrorlist-27-1-any.pkg.tar.zst"  \
-              "${mirror_url}/pacman-7.1.0.r9.g54d9411-3-x86_64.pkg.tar.zst"
+    # curl mirrorlist, find first offurence of `pacman-...` like pacman-7.1.0.r9.g54d9411-3-x86_64.pkg.tar.zst
+    # same for `cachyos-keyring-...` `cachyos-mirrorlist-...` `cachyos-v3-mirrorlist-...` `cachyos-v4-mirrorlist-...`
+    keyring_pkg=$(fetch_latest 'cachyos-keyring-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-keyring-20240331-1-any.pkg.tar.zst')
+    mirrorlist_pkg=$(fetch_latest 'cachyos-mirrorlist-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-mirrorlist-27-1-any.pkg.tar.zst')
+    v3_mirrorlist_pkg=$(fetch_latest 'cachyos-v3-mirrorlist-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-v3-mirrorlist-27-1-any.pkg.tar.zst')
+    v4_mirrorlist_pkg=$(fetch_latest 'cachyos-v4-mirrorlist-[^"<> ]+\.pkg\.tar\.zst' 'cachyos-v4-mirrorlist-27-1-any.pkg.tar.zst')
+    pacman_pkg=$(fetch_latest 'pacman-[^"<> ]+x86_64\.pkg\.tar\.zst' 'pacman-7.1.0.r9.g54d9411-3-x86_64.pkg.tar.zst')
+
+    pacman --noconfirm -U "${mirror_url}/${keyring_pkg}" \
+              "${mirror_url}/${mirrorlist_pkg}"    \
+              "${mirror_url}/${v3_mirrorlist_pkg}" \
+              "${mirror_url}/${v4_mirrorlist_pkg}"  \
+              "${mirror_url}/${pacman_pkg}"
 
     local is_repo_added="$(check_if_repo_was_added)"
     local is_repo_commented="$(check_if_repo_was_commented)"
