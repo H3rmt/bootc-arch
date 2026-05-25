@@ -32,6 +32,7 @@ jobs:
 
           sudo podman build --no-hostname --network=host -f Containerfile -t "${IMAGE_REPO}-base:weekly" .
           echo "Built base image: ${IMAGE_REPO}-base:weekly"
+          sudo podman images
 
       - name: Build chunked image with chunkah
         run: |
@@ -46,6 +47,7 @@ jobs:
           
           sudo podman load -i $(pwd)/image > out
           sudo podman tag "$(awk -F'sha256:' '/sha256:/ {print $2}' out)" "${IMAGE_REPO}:weekly"
+          sudo podman images
 
           echo "Loaded chunked image: ${IMAGE_REPO}:weekly"
 

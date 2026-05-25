@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
-
 set -xeuo pipefail
 
 # install basic packages and tools
-pacman --noconfirm -Sy dracut qrencode linux linux-firmware linux-headers glibc less zsh tree tmux \
-    ostree btrfs-progs e2fsprogs openssh exfat-utils dosfstools skopeo lsof \
-    ttf-jetbrains-mono-nerd dbus-glib glib2 shadow man dbus rocm-smi-lib \
-    intel-ucode micro git sudo systemd noto-fonts cantarell-fonts ncdu htop btop zoxide \
-    upower powertop nvme-cli smartmontools bluez plymouth fzf networkmanager \
-    ripgrep make brightnessctl flatpak pkgstats distrobox podman podman-compose gparted exfatprogs \
-    pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse \
-    yazi poppler poppler-data fd jq zstd ffmpeg chafa resvg \
-    zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting
+pacman --noconfirm -Sy dracut linux linux-firmware linux-headers glibc glib2 ostree systemd dbus flatpak
+
+# install packages
+/prepare/files/install-packages.sh "/prepare/files/packages.conf" "pacman --noconfirm -Sy"
 
 # install bootc
 pacman --noconfirm -Sy rust go-md2man

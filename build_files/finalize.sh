@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -xeuo pipefail
 
 # Generate locales

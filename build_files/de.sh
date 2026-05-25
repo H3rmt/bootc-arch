@@ -1,30 +1,13 @@
 #!/usr/bin/env bash
-
 set -xeuo pipefail
 
 # basic gui programs
-pacman --noconfirm -Sy \
-    alacritty firefox chromium pavucontrol mpv \
-    podman-desktop rofi yad gnome-tweaks nautilus \
-    gnome-keyring wl-clipboard playerctl pipewire wireplumber \
-    slurp grim swappy fuzzel ydotool sddm evince gvfs-mtp \
-    gnome-software gnome-autoar gnome-bluetooth-3.0 gnome-disk-utility \
-    gnome-disk-utility gnome-keyring gnome-power-manager xdg-desktop-portal-gnome \
+/prepare/files/install-packages.sh "/prepare/files/programs.conf" "pacman --noconfirm -Sy"
 
-su builder -c '
-  yay --noconfirm --needed -S \
-    visual-studio-code-bin \
-    jetbrains-toolbox \
-    google-chrome \
-    tuxedo-control-center-bin tuxedo-drivers-dkms \
-    candy-icons-git plymouth-theme-loader-alt-git \
-    archlinux-themes-sddm \
-'
+# Aur Packages
+/prepare/files/install-packages.sh "/prepare/files/aur-packages.conf" "su builder -c 'yay --noconfirm --needed -S'"
 
-pacman --noconfirm -Sy \
-    hyprland \
-    hyprpicker hypridle hyprlock xdg-desktop-portal-hyprland hyprpaper \
-    hyprpolkitagent hyprland-qt-support hyprcursor \
-    dunst waybar udiskie
+# Hyprland
+/prepare/files/install-packages.sh "/prepare/files/hyprland-files.conf" "pacman --noconfirm -Sy"
 
 systemctl enable sddm.service

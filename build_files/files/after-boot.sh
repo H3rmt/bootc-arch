@@ -9,7 +9,7 @@ log() {
 }
 
 # Store hash of the script content to check if it has changed since last run
-current_hash=$(sha256sum after-boot.sh flatpak-apps.txt)
+current_hash=$(sha256sum after-boot.sh flatpak-apps.conf)
 hash_file="/var/lib/after-boot/last_hash"
 if [[ -f "$hash_file" ]]; then
   last_hash=$(cat "$hash_file")
@@ -31,14 +31,20 @@ done
 echo ""
 
 
-flatpak_file="flatpak-apps.txt"
-# apps must be read from /opt/after-boot/flatpak-apps.txt, one app per line
+flatpak_file="flatpak-apps.conf"
+# apps must be read from /opt/after-boot/flatpak-apps.conf, one app per line
 if [[ -f "$flatpak_file" ]]; then
   log "Installing flatpak apps from $flatpak_file"
   while IFS= read -r app; do
-    if [[ -n "$app" ]]; then
-      log "Installing $app"
-      flatpak install -y --noninteractive "$app" || log "Failed to install $app, continuing with next app"
+    # strip out comments beginning with # (and anything after), and trim whitespace
+    app_no_comment="${app%%#*}"
+    # trim leading whitespace
+    app_no_comment="${app_no_comment#${app_no_comment%%[![:space:]]*}}"
+    # trim trailing whitespace
+    app_no_comment="${app_no_comment%${app_no_comment##*[![:space:]]}}"
+    if [[ -n "$app_no_comment" ]]; then
+      log "Installing $app_no_comment"
+      flatpak install -y --noninteractive "$app_no_comment" || log "Failed to install $app_no_comment, continuing with next app"
     fi
   done < "$flatpak_file"
 else

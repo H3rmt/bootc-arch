@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -xeuo pipefail
 
 # create builder user to build yay and other aur packages (can use sudo)
@@ -11,8 +10,8 @@ Defaults:builder !requiretty
 EOF
 chmod 440 /etc/sudoers.d/builder
 
-# cant run makepkg as root, so we have to do it as builder
-# cant finish the install as builder because install needs root
+# can't run makepkg as root, so we have to do it as builder
+# can't finish the install as builder because install needs root
 su builder -c '
   git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
   cd /tmp/yay-bin
