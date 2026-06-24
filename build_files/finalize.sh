@@ -20,6 +20,11 @@ groupdel builder || true
 pacman --noconfirm -Rs yay-bin rust go-md2man
 pacman --noconfirm -Rdd --noconfirm pacman
 
+# Enable filesystem trim
+systemctl enable fstrim.timer
+
+# Enable filesystem backups
+systemctl enable timeshift-hourly.timer
 
 # Enable homed
 systemctl enable systemd-homed.service
