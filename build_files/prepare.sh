@@ -10,6 +10,7 @@ ln -s /usr/share/zoneinfo/Europe/Berlin            /etc/localtime
 install -Dm644 /prepare/conf/prepare-root.conf     /usr/lib/ostree/prepare-root.conf
 install -Dm644 /prepare/conf/dracut.conf           /etc/dracut.conf.d/bootc.conf
 install -Dm644 /prepare/conf/nix.conf              /etc/nix/nix.conf
+install -Dm644 /prepare/conf/sddm.conf             /etc/sddm.conf
 
 # copy after boot script and service
 install -Dm755 /prepare/files/after-boot.sh       /opt/after-boot/after-boot.sh
