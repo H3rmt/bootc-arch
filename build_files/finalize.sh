@@ -5,8 +5,9 @@ set -xeuo pipefail
 locale-gen
 
 # Build initramfs with dracut, using the latest kernel available in /usr/lib/modules
-depmod -a
+ls -la /usr/lib/modules
 kernel_dir="$(find /usr/lib/modules -mindepth 1 -maxdepth 1 -type d | grep -v '\.img$' | sort | tail -n 1)"
+depmod "${kernel_dir##*/}"
 dracut --force "${kernel_dir}/initramfs.img"
 
 # remove builder user
