@@ -40,10 +40,10 @@ If you want to build a raw disk image instead of installing to a physical disk, 
 
 4. Setup
 ```
-Setup is being handled by systemd-firstboot
+Setup (timezone, root password, etc.) is being handled by systemd-firstboot
 ```
 
-5. Setup user
+5. Setup user (after boot)
 ```
 homectl create user --shell=/usr/bin/zsh --member-of=wheel,i2c,uucp
 homectl activate user

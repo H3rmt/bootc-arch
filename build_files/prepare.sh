@@ -4,7 +4,7 @@ set -xeuo pipefail
 # Basic configs
 install -Dm644 /prepare/conf/locale.conf           /etc/locale.conf
 install -Dm644 /prepare/conf/locale.gen            /etc/locale.gen
-install -Dm644 /prepare/conf/.zshrc                /etc/skel/.zshrc
+install -Dm644 /prepare/conf/zshrc                 /etc/skel/.zshrc
 install -Dm644 /prepare/conf/plymouthd.conf        /etc/plymouth/plymouthd.conf
 ln -s /usr/share/zoneinfo/Europe/Berlin            /etc/localtime
 install -Dm644 /prepare/conf/prepare-root.conf     /usr/lib/ostree/prepare-root.conf
