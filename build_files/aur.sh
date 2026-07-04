@@ -2,8 +2,8 @@
 set -xeuo pipefail
 
 # create builder user to build yay and other aur packages (can use sudo)
-groupadd -g 771 builder || true
-useradd -m builder -u 771 -g 771 || true
+groupadd -g 10005 builder || true
+useradd -m builder -u 10005 -g 10005 || true
 cat >/etc/sudoers.d/builder <<'EOF'
 builder ALL=(ALL) NOPASSWD: ALL
 Defaults:builder !requiretty

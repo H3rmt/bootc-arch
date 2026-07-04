@@ -19,8 +19,6 @@ groupdel builder || true
 pacman --noconfirm -Rs yay-bin rust go-md2man
 pacman --noconfirm -Rdd --noconfirm pacman
 
-systemctl daemon-reload
-
 # Enable filesystem trim
 systemctl enable fstrim.timer
 
