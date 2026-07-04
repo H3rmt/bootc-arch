@@ -5,7 +5,7 @@ set -xeuo pipefail
 /prepare/files/install-packages.sh "/prepare/files/programs.conf" pacman --noconfirm -S
 
 # Aur Packages
-/prepare/files/install-packages.sh "/prepare/files/aur-packages.conf" su builder -c 'yay --noconfirm --needed -S'
+su builder -c '/prepare/files/install-packages.sh "/prepare/files/aur-packages.conf" yay --noconfirm --needed -S'
 
 # Hyprland
 /prepare/files/install-packages.sh "/prepare/files/hyprland-files.conf" pacman --noconfirm -S
